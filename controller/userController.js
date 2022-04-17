@@ -49,11 +49,14 @@ const verifyEmailAddress = async (req, res) => {
 };
 const verifyCoinPOSEmailAddress = async (req, res) => {
 
-  //var msgReturn = "CoinPOS " + JSON.stringify(req.body);
+
+  var msgReturn = "CoinPOS " + JSON.stringify(req.body);
+  console.log("Obj = " + msgReturn);
   //res.send({
-  //  message:msgReturn
-  //});
-  //return;
+  res.status(500).send({
+    message:msgReturn
+  });
+  return;
 
   const isAdded = await findCoinPOSEmail(req.body.companyId,req.body.email);
   

@@ -1,4 +1,7 @@
 const Product = require('../models/Product');
+const fetch = require('isomorphic-unfetch')
+
+const serviceUrl = process.env.COINPOS_URL;
 
 const addProduct = async (req, res) => {
   try {
@@ -27,7 +30,38 @@ const addAllProducts = async (req, res) => {
     });
   }
 };
+const getCountry = async(req,res) => {
+  try
+  {
+    //var countryData = ''
+    //res.send("CoinPOS Country");
+    //console.log(req.body);
+    //return;
+    await fetch(serviceUrl + 'GetCountry',
+    { 
+      method:'POST',
+      //credentials:"include",
+      headers: {'Content-Type': 'application/json','x-security-lock':'0241CCFF2D40AF7AF8A4FC02272C47A30D15DBDFB36E3266D1296212574F328E'},
+      body:``  
+      }).then(function(response) {
+        return response.text();
+      }).then(function(data) {
 
+      //var obj = JSON.parse(data);
+      //console.log("get country " + data);
+      countryData = (data);
+    });
+    
+      res.send(countryData);
+  }
+  catch (err) 
+  {
+    //console.log("Error " + err.message);
+    res.status(200).send({
+      message: err.message,
+    });
+  }
+};
 const getShowingProducts = async (req, res) => {
   try {
     const products = await Product.find({ status: 'Show' }).sort({ _id: -1 });
@@ -163,6 +197,7 @@ const deleteProduct = (req, res) => {
   });
 };
 
+
 module.exports = {
   addProduct,
   addAllProducts,
@@ -175,4 +210,5 @@ module.exports = {
   updateProduct,
   updateStatus,
   deleteProduct,
+  getCountry,
 };

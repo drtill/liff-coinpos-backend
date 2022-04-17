@@ -12,6 +12,7 @@ const {
   updateProduct,
   updateStatus,
   deleteProduct,
+  getCountry
 } = require('../controller/productController');
 
 //add a product
@@ -19,9 +20,11 @@ router.post('/add', addProduct);
 
 //add multiple products
 router.post('/all', addAllProducts);
-
+router.post('/GetCountry', getCountry);
 //get a product
 router.post('/:id', getProductById);
+
+
 
 //get showing products only
 router.get('/show', getShowingProducts);
@@ -46,5 +49,7 @@ router.put('/status/:id', updateStatus);
 
 //delete a product
 router.delete('/:id', deleteProduct);
+
+
 
 module.exports = router;
