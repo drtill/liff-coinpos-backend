@@ -53,11 +53,13 @@ const verifyCoinPOSEmailAddress = async (req, res) => {
   var msgReturn = "CoinPOS " + JSON.stringify(req.body);
   console.log("Obj = " + msgReturn);
   //res.send({
-  res.status(500).send({
-    message:msgReturn
-  });
-  return;
+  //res.status(500).send({
+  //  message:msgReturn
+  //});
+  //return;
 
+  console.log("req.body.CompanyId = " + req.body.companyId);
+  console.log("req.body.Email = " + req.body.email);
   const isAdded = await findCoinPOSEmail(req.body.companyId,req.body.email);
   
   if (isAdded) {
@@ -66,7 +68,10 @@ const verifyCoinPOSEmailAddress = async (req, res) => {
     });
   } else {
     
+    console.log("Send Email");
     const token = tokenForVerify(req.body);
+    console.log("token = " + token);
+    
     const body = {
       from: process.env.EMAIL_USER,
       to: `${req.body.email}`,
@@ -88,6 +93,7 @@ const verifyCoinPOSEmailAddress = async (req, res) => {
              `,
     };
 
+    console.log("body email = " + JSON.stringify(body));
     const message = 'Please check your email to verify!';
     sendEmail(body, res, message);
   }
@@ -95,8 +101,10 @@ const verifyCoinPOSEmailAddress = async (req, res) => {
 
 const findCoinPOSEmail = async(companyId, email) => 
 {
+
   try
   {
+    console.log('companyId = ' + companyId + " email = " + email);
     await fetch(serviceUrl + 'GetEmailInCompany',//fetch('http://localhost:5002/simple-cors3', 
     { 
       method:'POST',
@@ -117,9 +125,7 @@ const findCoinPOSEmail = async(companyId, email) =>
       //res.send(productList);
   }
   catch (err) {
-    res.status(500).send({
-      message: err.message,
-    });
+    return "Error: " + err.message;
   }
 };
 const findCoinPOSCustomerAccount = async(companyId, email, password) => 
@@ -294,9 +300,11 @@ const registerCoinPOSUser = async (req, res) => {
 
   
   const token = req.params.token;
-  const { name, email, password, companyId } = jwt.decode(token);
+  const { name, email, password, companyId, dataPath } = jwt.decode(token);
   //var msgReturn = //JSON.stringify(req.body);
-  //console.log("name = " + name + " email = " + email + " password = " + password + " companyId = " + companyId); 
+  var deco = jwt.decode(token);
+  console.log(JSON.stringify(deco));
+  console.log("name = " + name + " email = " + email + " password = " + password + " companyId = " + companyId + " dataPath = " + dataPath); 
   //res.send({
   //  message:msgReturn
   //});
@@ -336,6 +344,7 @@ const registerCoinPOSUser = async (req, res) => {
           _id: newUser._id,
           name: newUser.name,
           email: newUser.email,
+          dataPath:dataPath,
           message: 'Email Verified, Please Login Now!',
         });
       }

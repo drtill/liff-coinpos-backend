@@ -27,6 +27,8 @@ const tokenForVerify = (user) => {
       name: user.name,
       email: user.email,
       password: user.password,
+      companyId: user.companyId,
+      dataPath:user.dataPath
     },
     process.env.JWT_SECRET_FOR_VERIFY,
     { expiresIn: '15m' }
@@ -63,7 +65,7 @@ const sendEmail = (body, res, message) => {
     host: process.env.HOST,
     service: process.env.SERVICE,
     port: process.env.EMAIL_PORT,
-    secure: true,
+    secure: false,//true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
